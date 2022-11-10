@@ -3,11 +3,9 @@ import styles from './Timesheets.module.css';
 
 import DeleteButton from './DeleteButton';
 import EditButton from './EditButton';
-import Icon from '@mdi/react'
-import { mdiPencil,mdiDelete } from '@mdi/js'
+import AddButton from './AddButton';
 
 async function getTimesheets() {
-    // await sleep(3000);
     const res = await fetch(
         'http://127.0.0.1:8090/api/collections/timesheets/records?page=1&perPage=30',
         { cache: 'no-store' }
@@ -18,17 +16,31 @@ async function getTimesheets() {
 }
 
 export default async function TimesheetsPage() {
-    const timesheets = await getTimesheets();
+    let timesheets = await getTimesheets();
+
+    const monthsList: string[] = [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    timesheets.sort((a, b) => monthsList.indexOf(a.month) - monthsList.indexOf(b.month));
     
-    // console.log(timesheets);
-    // const s = timesheets?.map((timesheet) => {
-    //     return timesheet.id
-    // })
-    // console.log(s);
+    
+    const timesheetMonths = timesheets.map((timesheet) => {
+        return timesheet.month;
+    });
+    
+
+
+    const availableMonthsList = monthsList.filter(function (item) {
+        return timesheetMonths.indexOf(item) === -1;
+    });
+
 
     return (
         <div>
-            <h1 className='text-2xl m-5'>Timesheets</h1>
+            <div className='flex items-center'>
+                <h1 className='text-2xl m-5'>Timesheets</h1>
+                <AddButton months={availableMonthsList}/>
+            </div>
 
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-5 text-center'>
                 {timesheets?.map((timesheet) => {
@@ -40,12 +52,7 @@ export default async function TimesheetsPage() {
 }
 
 function Timesheet(props: any) {
-    // console.log(timesheet);
     const { id, month, created } = props.timesheet || {};
-    // console.log(id, month);
-
-    // const month = 'april';
-    // console.log(id);
 
     return (
         <div className='p-4 rounded-lg shadow-lg bg-pink-500'>

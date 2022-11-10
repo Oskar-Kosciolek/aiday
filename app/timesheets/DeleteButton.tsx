@@ -1,18 +1,19 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import Icon from '@mdi/react'
 import { mdiDelete } from '@mdi/js'
 
 function DeleteButton(props: any) {
     const { timesheetId } = props || {};
+    const router = useRouter();
 
     const handleDelete = async (timesheetId: string) => {
-        const res = await fetch(`/api/timesheets/${timesheetId}`, {
+        await fetch(`/api/timesheets/${timesheetId}`, {
             method: "DELETE",
         });
 
-        const data = await res.json();
-        return data?.status as number
+        router.refresh();
     }
 
   return (
