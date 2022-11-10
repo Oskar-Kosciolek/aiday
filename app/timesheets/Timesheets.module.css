@@ -1,0 +1,19 @@
+.grid {
+  display: grid;
+
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  gap: 0px;
+  height: 100%;
+}
+
+.grid .gridElement {
+    text-align: center;
+}
+
+.flexRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
